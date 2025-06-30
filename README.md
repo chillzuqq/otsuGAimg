@@ -1,70 +1,99 @@
-Optimal Image Thresholding using a Genetic Algorithm with Otsu's Method
-This project demonstrates a sophisticated approach to image thresholding by employing a Genetic Algorithm (GA) to find the optimal threshold value for binarizing a grayscale image. The fitness of each potential threshold is evaluated using Otsu's method, which aims to minimize the intra-class variance.
+# Optimal Image Thresholding with a Genetic Algorithm
 
-📖 Methodology
-The process is divided into two main parts: the implementation of a Genetic Algorithm and the application of Otsu's method as its fitness function.
+![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)
 
-1. Otsu's Method (Fitness Function)
-Otsu's method is a well-regarded technique in image processing for automatic thresholding. It works by finding a threshold that separates the image into two classes (foreground and background) in a way that minimizes their combined spread (within-class variance).
+This repository contains a Python implementation of an advanced image thresholding technique that uses a **Genetic Algorithm (GA)** to discover the optimal threshold for binarizing a grayscale image. The fitness of each potential threshold is evaluated using **Otsu's method**, which minimizes the intra-class variance to achieve the best possible separation between foreground and background pixels.
 
-The compute_otsu_criteria function calculates this variance for a given threshold. A lower value indicates a better separation, making it the perfect objective for our GA to minimize.
+## ✨ Features
 
-2. Genetic Algorithm (GA)
-The GA is a search heuristic inspired by the process of natural selection. It is used here to efficiently search the entire range of possible thresholds (0-255) to find the one that performs best according to Otsu's method.
+-   **Intelligent Thresholding**: Moves beyond static methods by using a GA to search for the best threshold.
+-   **Otsu's Method Fitness**: Leverages a proven statistical method to guide the optimization process.
+-   **Customizable GA Parameters**: Easily tune the population size, number of generations, and mutation rate to fit different needs.
+-   **Visual Output**: Generates a side-by-side comparison of the original and thresholded images.
 
-Encoding: Each potential threshold value (an integer from 0 to 255) is represented as a "chromosome" or "individual" in the form of an 8-bit binary list.
+## 🔬 Methodology Explained
 
-Initialization: The algorithm starts with an initial population of 20 random individuals.
+The core of this project is the synergy between a powerful search heuristic (the GA) and a robust statistical method (Otsu's).
 
-Evolutionary Cycle: The algorithm evolves the population over 50 generations. In each generation:
+### 1. Otsu's Method as the Fitness Function
 
-Fitness Evaluation: Each individual's binary string is converted to its integer equivalent, and its fitness is calculated using the Otsu's method function.
+Otsu's method provides a way to measure how "good" a given threshold is. It automatically finds a threshold that minimizes the weighted sum of within-class variances. A lower variance signifies a better-defined separation between the two classes of pixels (foreground and background). This variance value serves as the **fitness score** for our Genetic Algorithm, where the goal is to find the threshold that results in the *lowest* score.
 
-Selection: Parents are chosen for reproduction using Tournament Selection. A small, random subset of the population competes, and the fittest individual from this group is selected.
+### 2. The Genetic Algorithm
 
-Elitism: The single best individual from the current generation is preserved and automatically passed to the next generation, ensuring progress is never lost.
+The GA explores the space of all possible thresholds (0-255) to find the optimal one.
 
-Crossover: Two parent individuals create a new "child" using single-point crossover, where the binary strings of the parents are split at a random point and recombined.
+-   **Chromosome Encoding**: Each potential threshold is an "individual" represented as an **8-bit binary string** (e.g., `10110101`), which directly maps to an integer between 0 and 255.
 
-Mutation: Each bit in the new child's binary string has a small chance (0.2%) of being flipped. This maintains genetic diversity and helps the algorithm explore the entire search space.
+-   **Evolutionary Process**: The algorithm evolves a population of these individuals over several generations:
+    1.  **Initialization**: A random population of potential thresholds (chromosomes) is created.
+    2.  **Fitness Evaluation**: Each chromosome's fitness is calculated using the Otsu's variance function.
+    3.  **Selection**: **Tournament Selection** is used to choose parent chromosomes for the next generation. The fittest individuals in random subgroups are more likely to be selected.
+    4.  **Crossover**: Selected parents are combined using **single-point crossover** to create offspring, mixing their genetic material.
+    5.  **Mutation**: A small probability of **bit-flipping** is applied to the offspring to introduce new genetic variations and prevent premature convergence.
+    6.  **Elitism**: The best individual from each generation is automatically preserved, ensuring that the best solution found is never lost.
 
-Termination: After 50 generations, the algorithm concludes. The best-performing individual (the one with the lowest Otsu variance) across all generations is selected as the optimal threshold.
+-   **Termination**: After a set number of generations, the algorithm returns the best chromosome found, which represents the optimal threshold value.
 
-🚀 How to Use
-This project is implemented in a Jupyter Notebook (.ipynb) file.
+### GA Parameters
+The algorithm's performance can be fine-tuned via these constants in the code:
 
-1. Dependencies
-This script requires the following Python libraries. You can install them using pip:
+| Parameter         | Default Value | Description                                          |
+| ----------------- | :-----------: | ---------------------------------------------------- |
+| `POPULATION_SIZE` |      20       | The number of chromosomes in each generation.        |
+| `N_GENERATIONS`   |      50       | The number of cycles the evolution will run.         |
+| `MUTATION_RATE`   |     0.002     | The probability of a single bit flip during mutation. |
+| `TOURNAMENT_SIZE` |       5       | The size of the selection tournament.                |
 
-pip install numpy Pillow matplotlib
 
-NumPy: For numerical operations on the image array.
+---
 
-Pillow (PIL Fork): For opening, converting, and resizing the image.
+## 🚀 Getting Started
 
-Matplotlib: For visualizing the results.
+Follow these steps to run the project on your local machine.
 
-2. Running the Code
-Place the image you want to process in the same directory as the notebook or provide the full path.
+### Prerequisites
 
-Open the uas_siskonlanjut.ipynb file in a Jupyter environment.
+Make sure you have Python 3.9+ installed. You will also need the following libraries:
 
-In the fourth code cell, modify the path_image variable to point to your image file:
+-   NumPy
+-   Pillow
+-   Matplotlib
+-   Seaborn (optional, used in the original notebook but not essential for the core logic)
 
-path_image = 'your_image_name.JPG' # Change this to your image path
+### Installation
 
-Run all the cells in the notebook.
+1.  Clone the repository:
+    ```bash
+    git clone [https://github.com/your-username/ga-otsu-thresholding.git](https://github.com/your-username/ga-otsu-thresholding.git)
+    cd ga-otsu-thresholding
+    ```
 
-3. Output
-The notebook will print the progress of the Genetic Algorithm for each generation, showing the best fitness score and the corresponding threshold. Finally, it will display a plot comparing the original image with the final binarized image produced using the optimal threshold.
+2.  Install the required packages:
+    ```bash
+    pip install numpy Pillow matplotlib
+    ```
 
-⚙️ Parameters
-The Genetic Algorithm's behavior can be tuned by adjusting these parameters at the beginning of the third code cell:
+### Usage
 
-POPULATION_SIZE: The number of individuals in the population (default: 20).
+1.  Add the image you wish to process to the project directory.
+2.  Open the `OtsuGAcode.ipynb` notebook in a Jupyter environment (like Jupyter Lab or VS Code).
+3.  Locate the following line and update the path to your image:
+    ```python
+    path_image = 'CIMG5004.JPG'  # <-- Change this to your image file
+    ```
+4.  Run all cells in the notebook. The output will show the GA's progress and display the final comparison image.
 
-N_GENERATIONS: The number of evolutionary cycles (default: 50).
+## 🤝 Contributing
 
-MUTATION_RATE: The probability of a bit being flipped during mutation (default: 0.002).
+Contributions are welcome! If you have suggestions for improvements or want to add new features, feel free to fork the repository and submit a pull request.
 
-TOURNAMENT_SIZE: The number of individuals competing in each selection tournament (default: 5).
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+## 📜 License
+
+This project is distributed under the MIT License. See `LICENSE.txt` for more information.
